@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LatencyTracker {
@@ -35,8 +37,9 @@ public class LatencyTracker {
     @Value("${application.influx.org}")
     private       String         influxorg;
 
-    @Scheduled(cron = "0 0/5 0 ? * *")
+    @Scheduled(cron = "* */5 * * * *")
     public void trackByQuery() throws InterruptedException {
+        log.info("Started !");
         Histogram histogram = metricRegistry.histogram("queryLatency");
         for (int i = 0; i < repeat; i++) {
             LocalTime start = LocalTime.now();
